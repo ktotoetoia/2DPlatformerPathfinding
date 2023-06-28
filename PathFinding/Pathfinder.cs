@@ -6,9 +6,6 @@ public class Pathfinder : MonoBehaviour
 {
     [SerializeField] private Tilemap tilemap;
     [SerializeField] private Vector2 accuracy;
-    [SerializeField] private Vector2Int path;
-    
-    public IGridGraph graph { get; private set; }
 
     private IGraphNodeCreator graphCreator;
     private IGraphConnector graphConnector;
@@ -16,26 +13,12 @@ public class Pathfinder : MonoBehaviour
     private IJumpTrajectoriesCreator jumpTrajectoriesCreator;
     private IPathUser pathUser;
     
-    private DijkstraAlgorithm algorithm = new DijkstraAlgorithm();
-    
+    public IGridGraph graph { get; private set; }
+
     private void Awake()
     {
         InstantiateGraph();
         ConnectGraph();
-    }
-
-    private void Update()
-    {
-        INode prev = null;
-        foreach(INode node in algorithm.GetPath(graph, graph.Nodes[path.x], graph.Nodes[path.y]))
-        {
-            if(prev != null)
-            {
-                Debug.DrawLine(prev.Position, node.Position);
-            }
-
-            prev = node;
-        }
     }
 
     private void InstantiateGraph()

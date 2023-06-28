@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 public class DijkstraAlgorithm
 {
-    public List<INode> GetPath(IHasGraphNodes graph, INode start, INode end)
+    public List<IEdge> GetPath(IHasGraphNodes graph, INode start, INode end)
     {
         List<INode> notVisited = graph.Nodes.ToList();
 
@@ -17,7 +18,7 @@ public class DijkstraAlgorithm
             INode toOpen = GetNodeWithLowestPrice(notVisited, track);
 
             if (toOpen == null)
-                return null;
+                return new List<IEdge>();
 
             if (toOpen == end)
                 break;
@@ -61,18 +62,23 @@ public class DijkstraAlgorithm
         }
     }
 
-    private List<INode> GetShortestPath(INode endNode, Dictionary<INode, DijkstraData> track)
+    private List<IEdge> GetShortestPath(INode endNode, Dictionary<INode, DijkstraData> track)
     {
-        var result = new List<INode>();
+        var result = new List<IEdge>();
 
         while (endNode != null)
         {
-            result.Add(endNode);
+            if (track.ContainsKey(endNode) && track[endNode].Previous != null)
+            {
+                result.Add(track[endNode].Previous.Edges.Find(x => x.IsIncident(endNode)));
+            }
+
             endNode = track[endNode].Previous;
         }
-
+        
         result.Reverse();
-        return result;
+
+        return result.Where(x => x != null).ToList();
     }
 }
 
