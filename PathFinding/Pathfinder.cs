@@ -43,7 +43,7 @@ public class Pathfinder : MonoBehaviour
 
     private IPathUser CreatePathUser()
     {
-        GameObject gameObject = FindObjectOfType<Movement>().gameObject;
+        GameObject gameObject = FindObjectOfType<VelocityMovement>().gameObject;
         return new CapsulePathUser(gameObject.GetComponent<CapsuleCollider2D>(), new Vector3(8, 12));
     }
 
