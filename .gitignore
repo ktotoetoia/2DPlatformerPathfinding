@@ -1,4 +1,4 @@
 *.meta
-Scripts/Animation
-Scripts/Input
-Scripts/Movement
+Animation
+Input
+Movement
