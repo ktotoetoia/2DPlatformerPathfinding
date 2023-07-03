@@ -1,30 +1,47 @@
 ﻿using UnityEngine.Tilemaps;
 using UnityEngine;
+using System.Collections.Generic;
 
 public class GridGraphNodeCreator : IGraphNodeCreator
 {
     private IGridGraph graph;
-    private Vector3 offset = new Vector3(0.5f, 0.5f, 0);
-    public GridGraphNodeCreator(IGridGraph graph)
+    private Vector3 offset;
+
+    public GridGraphNodeCreator(IGridGraph graph,IPathUser pathUser)
     {
         this.graph = graph;
+        offset = new Vector3(0.5f, pathUser.Offset.y);
     }
 
-    public void AddNodesFromTilemap(Tilemap tilemap)
+    public List<IHorizontalSurface> AddNodesFromTilemap(Tilemap tilemap)
     {
-        INode prevNode = null;
+        List<IHorizontalSurface> horizontalSurfaces = new List<IHorizontalSurface>();
+        List<INode> horizontalNodes = new List<INode>();
 
         foreach (Vector3Int position in tilemap.cellBounds.allPositionsWithin)
         {
             INode node = TryAddNode(tilemap, position);
 
-            if (node != null && prevNode != null)
+            if (node != null)
             {
-                graph.Connect(node, prevNode);
+                horizontalNodes.Add(node);
+                continue;
             }
-
-            prevNode = node;
+        
+            if(horizontalNodes.Count > 0)
+            {
+                horizontalSurfaces.Add(CreateHorizontalSurface(horizontalNodes));
+            }
         }
+
+        return horizontalSurfaces;
+    }
+
+    private IHorizontalSurface CreateHorizontalSurface(List<INode> horizontalNodes)
+    {
+        IHorizontalSurface horizontalSurface = new HorizontalSurface(graph, horizontalNodes);
+        horizontalNodes.Clear();
+        return horizontalSurface;
     }
 
     private INode TryAddNode(Tilemap tilemap, Vector3Int position)
@@ -44,12 +61,12 @@ public class GridGraphNodeCreator : IGraphNodeCreator
     {
         Vector3Int gridPosition = position - tilemap.cellBounds.min;
 
-        INode node = graph.AddNode(GetNodeType(position, tilemap), position + offset, gridPosition);
+        INode node = graph.AddNode(GetNodeType(tilemap, position), position + offset, gridPosition);
 
         return node;
     }
 
-    private NodeType GetNodeType(Vector3Int position, Tilemap tilemap)
+    private NodeType GetNodeType(Tilemap tilemap, Vector3Int position)
     {
         bool hasLeftTile = tilemap.GetTile(new Vector3Int(position.x - 1, position.y - 1)) != null;
         bool hasRightTile = tilemap.GetTile(new Vector3Int(position.x + 1, position.y - 1)) != null;

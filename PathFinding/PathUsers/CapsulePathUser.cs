@@ -1,21 +1,21 @@
 ﻿using UnityEngine;
 
-public class CapsulePathUser : IPathUser
+public class CapsulePathUser : PathUser
 {
-    private CapsuleCollider2D capsuleCollider;
-    public Rigidbody2D Rigidbody { get; private set; }
-    public Collider2D Collider { get { return capsuleCollider; } }
-    public Vector3 MaxVelocity { get; }
+    [SerializeField] private Vector2 SizeOffset = Vector2.one;
 
-    public CapsulePathUser(CapsuleCollider2D collider, Vector3 maxVelocity)
+    private CapsuleCollider2D capsuleCollider;
+
+    protected override void Awake()
     {
-        capsuleCollider = collider;
-        Rigidbody = collider.attachedRigidbody;
-        MaxVelocity = maxVelocity;
+        base.Awake();
+        capsuleCollider = GetComponent<CapsuleCollider2D>();
+        Size = capsuleCollider.size * transform.localScale;
+        Offset = Size/2;
     }
 
-    public bool WillTouchAtPosition(Vector2 center)
+    public override bool WillCollideAtPosition(Vector2 center)
     {
-        return Physics2D.OverlapCapsule(center, capsuleCollider.size- Vector2.one/10,CapsuleDirection2D.Vertical,0);
+        return Physics2D.OverlapCapsule(center, capsuleCollider.size + SizeOffset, CapsuleDirection2D.Vertical, 0, groundLayer);
     }
 }

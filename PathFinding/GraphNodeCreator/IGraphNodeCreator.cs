@@ -1,6 +1,7 @@
 ﻿using UnityEngine.Tilemaps;
+using System.Collections.Generic;
 
 public interface IGraphNodeCreator
 {
-    public void AddNodesFromTilemap(Tilemap tilemap);
+    public List<IHorizontalSurface> AddNodesFromTilemap(Tilemap tilemap);
 }
