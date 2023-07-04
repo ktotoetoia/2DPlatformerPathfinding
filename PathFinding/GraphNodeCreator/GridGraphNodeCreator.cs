@@ -15,6 +15,7 @@ public class GridGraphNodeCreator : IGraphNodeCreator
 
     public List<IHorizontalSurface> AddNodesFromTilemap(Tilemap tilemap)
     {
+        SetOffset(tilemap);
         List<IHorizontalSurface> horizontalSurfaces = new List<IHorizontalSurface>();
         List<INode> horizontalNodes = new List<INode>();
 
@@ -35,6 +36,11 @@ public class GridGraphNodeCreator : IGraphNodeCreator
         }
 
         return horizontalSurfaces;
+    }
+
+    private void SetOffset(Tilemap tilemap)
+    {
+        offset.x = tilemap.cellSize.x/2;
     }
 
     private IHorizontalSurface CreateHorizontalSurface(List<INode> horizontalNodes)

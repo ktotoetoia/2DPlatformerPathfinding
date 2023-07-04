@@ -15,6 +15,6 @@ public class PathUser : MonoBehaviour, IPathUser
 
     public virtual bool WillCollideAtPosition(Vector2 center)
     {
-        return false;
+        return true;
     }
 }

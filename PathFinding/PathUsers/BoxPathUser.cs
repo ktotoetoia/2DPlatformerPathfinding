@@ -2,7 +2,7 @@
 
 public class BoxPathUser : PathUser
 {
-    [SerializeField] private Vector3 SizeOffset = Vector3.one;
+    [SerializeField] private Vector3 SizeOffset;
 
     private BoxCollider2D boxCollider;
 

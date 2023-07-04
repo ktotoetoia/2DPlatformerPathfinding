@@ -42,6 +42,7 @@ public class JumpTrajectoriesConnector : IJumpTrajectoriesConnector
 
     private void TryConnectTrajectory(JumpTrajectory jumpTrajectory,IPathUser pathUser)
     {
+        timeStepMultiplier = 200 / (pathUser.MaxVelocity.x + pathUser.MaxVelocity.y);
         float timeStep = Time.fixedDeltaTime / Physics2D.velocityIterations * timeStepMultiplier;
         float drag = 1f - timeStep * pathUser.Rigidbody.drag;
 

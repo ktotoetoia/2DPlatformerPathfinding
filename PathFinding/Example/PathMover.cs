@@ -1,21 +1,19 @@
 ﻿using UnityEngine;
 
 // Example class
-
 public class PathMover : MonoBehaviour , IPathMover
 {
-    [SerializeField] private Vector2 target;
-
     private IDirectionalMover mover;
     private IDirectionalJumper jumper;
 
     private Collider2D collider;
     private Pathfinder pathfinder;
     private Path path;
+    private Vector2 target;
 
     public float Speed { get; set; }
     public float JumpForce { get; set; }
-
+    
     private void Start()
     {
         mover = GetComponent<IDirectionalMover>();
@@ -34,7 +32,7 @@ public class PathMover : MonoBehaviour , IPathMover
         if (Input.GetMouseButtonDown(0))
         {
             target = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            path = pathfinder.GetPath(transform.position,target);
+            path = pathfinder.GetPath(collider.bounds.center,target);
         }
     }
 
@@ -65,7 +63,7 @@ public class PathMover : MonoBehaviour , IPathMover
 
         if (path.MoveInfo.EdgeMoveWay == EdgeMoveWay.jump && !jumper.IsJumping)
         {
-            transform.position = path.Previous?.Position ?? path.Current.Position;
+            transform.position = (path.Previous?.Position ?? path.Current.Position) - (Vector3)collider.offset/2;
             jumper.Jump(path.MoveInfo.MaxVelocity);
         }
 
@@ -76,7 +74,7 @@ public class PathMover : MonoBehaviour , IPathMover
     {
         if (!path.arrived)
         {
-            path = pathfinder.GetPath(transform.position, target);
+            path = pathfinder.GetPath(collider.bounds.center, target);
         }
     }
 }

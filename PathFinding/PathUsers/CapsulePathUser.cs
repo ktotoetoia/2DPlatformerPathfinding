@@ -2,7 +2,7 @@
 
 public class CapsulePathUser : PathUser
 {
-    [SerializeField] private Vector2 SizeOffset = Vector2.one;
+    [SerializeField] private Vector3 SizeOffset;
 
     private CapsuleCollider2D capsuleCollider;
 
@@ -16,6 +16,6 @@ public class CapsulePathUser : PathUser
 
     public override bool WillCollideAtPosition(Vector2 center)
     {
-        return Physics2D.OverlapCapsule(center, capsuleCollider.size + SizeOffset, CapsuleDirection2D.Vertical, 0, groundLayer);
+        return Physics2D.OverlapCapsule(center, Size + SizeOffset, CapsuleDirection2D.Vertical, 0, groundLayer);
     }
 }
